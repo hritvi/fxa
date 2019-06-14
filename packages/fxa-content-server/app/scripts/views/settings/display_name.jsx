@@ -39,7 +39,7 @@ function DisplayNameComponent() {
     </header>
   );
 }
-function ChangeorAddButtonComponent(props) {
+export function ChangeorAddButtonComponent(props) {
   const displayName = props.displayName;
   if (displayName) {
     return (
@@ -61,7 +61,7 @@ function ChangeorAddButtonComponent(props) {
     );
   }
 }
-class DisplayNameFormComponent extends React.Component {
+export class DisplayNameFormComponent extends React.Component {
   constructor(props) {
     super(props);
 

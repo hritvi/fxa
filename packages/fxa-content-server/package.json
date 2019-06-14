@@ -128,6 +128,7 @@
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
+    "@testing-library/react": "^8.0.1",
     "audit-filter": "0.3.0",
     "babel-eslint": "9.0.0",
     "babel-plugin-dynamic-import-webpack": "1.0.2",

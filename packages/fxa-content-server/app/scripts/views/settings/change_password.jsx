@@ -12,16 +12,77 @@ import PasswordStrengthMixin from '../mixins/password-strength-mixin';
 import ServiceMixin from '../mixins/service-mixin';
 import SettingsPanelMixin from '../mixins/settings-panel-mixin';
 import Template from 'templates/settings/change_password.mustache';
+// eslint-disable-next-line
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 const t = msg => msg;
 
+function ChangePassword(props){
+  return (
+    <div id="change-password" className="settings-unit">
+      <div className="settings-unit-stub">
+        <header className="settings-unit-summary">
+          <h2 className="settings-unit-title">Password</h2>
+        </header>
+        <button className="settings-button secondary-button settings-unit-toggle" data-href="settings/change_password">Change...</button>
+      </div>
+      <ChangePasswordForm mail={props.mail}/>
+    </div>
+  );
+}
+
+function ChangePasswordForm(props){
+  return (
+    <div className="settings-unit-details">
+      <div className="error"></div>
+
+      <form noValidate>
+        <p>
+          Once you're finished, use your new password to sign in on all of your devices.
+        </p>
+        {/* hidden email field is to allow Fx password manager to correctly save the updated password. 
+        Without it, the password manager saves the old_password as the username. */}
+        <input type="email" defaultValue={props.mail} className="hidden" />
+        <div className="input-row password-row">
+          <input type="password" className="password" id="old_password" placeholder="Old password" required pattern=".{8,}" autoFocus />
+
+          <div className="input-help input-help-forgot-pw links centered"><a href="/reset_password" className="reset-password">Forgot password?</a></div>
+        </div>
+
+        <div className="input-row password-row">
+          <input type="password" className="password check-password tooltip-below" id="new_password" placeholder="New password" required pattern=".{8,}"  data-synchronize-show="true"/>
+          <div className="helper-balloon"></div>
+        </div>
+
+        <div className="input-row password-row">
+          <input type="password" className="password check-password tooltip-below" id="new_vpassword" placeholder="Re-enter password" required pattern=".{8,}"  data-synchronize-show="true"/>
+        </div>
+
+        <div className="button-row">
+          <button type="submit" className="settings-button primary-button">Change</button>
+          <button className="settings-button secondary-button cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 const View = FormView.extend({
   template: Template,
-  className: 'change-password',
+  classNameName: 'change-password',
   viewName: 'settings.change-password',
 
   getAccount () {
     return this.getSignedInAccount();
+  },
+
+  afterVisible () {
+    const account = this.getAccount();
+    ReactDOM.render(
+      <ChangePassword mail={account.get('email')}/>,
+      this.$el.get(0)
+    );
   },
 
   setInitialContext (context) {
