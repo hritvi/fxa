@@ -32,7 +32,7 @@ function DisplayName(props) {
     </div>
   );
 }
-function DisplayNameComponent() {
+export function DisplayNameComponent() {
   return (
     <header className="settings-unit-summary">
       <h2 className="settings-unit-title">{t('Display name')}</h2>
@@ -86,8 +86,10 @@ export class DisplayNameFormComponent extends React.Component {
     isValid (){
       if (this.props.displayName !== this.state.displayName){
         this.setState({changeButton: 0});
+        return 0;
       } else {
         this.setState({changeButton: 1});
+        return 1;
       }
     }
 
@@ -163,9 +165,13 @@ const View = BaseView.extend({
   // },
 
   submit(displayName) {
+    console.log('rendered');
+    console.log(displayName);
     const start = Date.now();
     const account = this.getSignedInAccount();
-
+    displayName = displayName.trim();
+    console.log('here');
+    console.log(account);
     return account.postDisplayName(displayName).then(() => {
       this.logViewEvent('success');
       this.updateDisplayName(displayName);
@@ -174,6 +180,8 @@ const View = BaseView.extend({
         `timing.displayName.change.${Date.now() - start}`
       );
       this.navigate('settings');
+      console.log(account);
+      // console.log(view);
     });
   },
 
