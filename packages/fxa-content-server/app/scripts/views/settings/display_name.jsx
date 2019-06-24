@@ -64,13 +64,19 @@ export function ChangeorAddButtonComponent(props) {
 export class DisplayNameFormComponent extends React.Component {
   constructor(props) {
     super(props);
-
+    this.isValid = this.isValid.bind(this);
     this.state = {
       changeButton: 1,
       displayName: props.account.get('displayName') || ''
+    }, ()=>{
+      this.isValid();
     };
-
-    this.isValid = this.isValid.bind(this);
+    console.log('dis');
+    console.log(this.props.displayName);
+    console.log('2');
+    console.log(this.state.displayName);
+    console.log(this.state.changeButton);
+    
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -84,12 +90,11 @@ export class DisplayNameFormComponent extends React.Component {
     };
 
     isValid (){
+      console.log('is valid called');
       if (this.props.displayName !== this.state.displayName){
         this.setState({changeButton: 0});
-        return 0;
       } else {
         this.setState({changeButton: 1});
-        return 1;
       }
     }
 
@@ -170,7 +175,7 @@ const View = BaseView.extend({
     const start = Date.now();
     const account = this.getSignedInAccount();
     displayName = displayName.trim();
-    console.log('here');
+    // console.log('here');
     console.log(account);
     return account.postDisplayName(displayName).then(() => {
       this.logViewEvent('success');

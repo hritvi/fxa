@@ -30,6 +30,7 @@ function ChangePassword(props){
       <ChangePasswordForm
         account={props.account}
         submit={props.submit}
+        showValidationError={props.showValidationError}
       />
     </div>
   );
@@ -55,29 +56,46 @@ class ChangePasswordForm extends React.Component{
        oldPass: event.target.value
      });
    }
- 
+
    getNewPassword = event => {
      this.setState({
        newPass: event.target.value
+     }, ()=>{
+       this.showValidationErrorsEnd();
      });
    }
- 
+
    getNewVPassword = event => {
      this.setState({
        newVPass: event.target.value
+     }, ()=>{
+       this.showValidationErrorsEnd();
      });
    }
- 
+   showValidationErrorsEnd () {
+     if (this.state.newPass !== this.state.newVPass) {
+       const err = AuthErrors.toError('PASSWORDS_DO_NOT_MATCH');
+       this.props.showValidationError('#new_vpassword', err);
+     }
+   }
+   componentWillUnmount () {
+     return this.state.newPass === this.state.newVPass;
+   }
    handleSubmit = event => {
      event.preventDefault();
-     this.props.submit(this.state.oldPass, this.state.newPass);
+     if (this.state.newPass !== this.state.newVPass) {
+       const err = AuthErrors.toError('PASSWORDS_DO_NOT_MATCH');
+       this.props.showValidationError('#new_vpassword', err);
+     } else {
+       this.props.submit(this.state.oldPass, this.state.newPass);
+     }
    };
- 
+
    render(){
      return (
        <div className="settings-unit-details">
          <div className="error"></div>
- 
+
          <form noValidate onSubmit={this.handleSubmit}>
            <p>
              Once you're finished, use your new password to sign in on all of your devices.
@@ -87,10 +105,10 @@ class ChangePasswordForm extends React.Component{
            <input type="email" defaultValue={this.state.mail} className="hidden" />
            <div className="input-row password-row">
              <input type="password" className="password" id="old_password" placeholder="Old password" required pattern=".{8,}" autoFocus onChange={this.getOldPassword}/>
- 
+
              <div className="input-help input-help-forgot-pw links centered"><a href="/reset_password" className="reset-password">Forgot password?</a></div>
            </div>
- 
+
            <div className="input-row password-row">
              <input
                type="password"
@@ -103,9 +121,9 @@ class ChangePasswordForm extends React.Component{
              />
              <div className="helper-balloon"></div>
            </div>
- 
+
            <div className="input-row password-row">
-             <input 
+             <input
                type="password"
                className="password check-password tooltip-below"
                id="new_vpassword"
@@ -115,7 +133,7 @@ class ChangePasswordForm extends React.Component{
                onChange={this.getNewVPassword}
              />
            </div>
- 
+
            <div className="button-row">
              <button type="submit" className="settings-button primary-button">Change</button>
              <button className="settings-button secondary-button cancel">Cancel</button>
@@ -125,49 +143,40 @@ class ChangePasswordForm extends React.Component{
      );
    }
 }
- 
+
 const View = BaseView.extend({
   template: Template,
   classNameName: 'change-password',
   viewName: 'settings.change-password',
- 
+
   // getAccount () {
   //   return this.getSignedInAccount();
   // },
- 
+
   afterVisible () {
     ReactDOM.render(
       <ChangePassword
         account={this.getSignedInAccount()}
         submit={(oldPassword, newPassword)=>this.submit(oldPassword, newPassword)}
+        showValidationError={(id,err)=>this.showValidationError(this.$(id),err)}
       />,
       this.$el.get(0)
     );
   },
- 
+
   // setInitialContext (context) {
   //   const account = this.getAccount();
   //   context.set('email', account.get('email'));
   // },
- 
-  isValidEnd () {
-    return this._getNewPassword() === this._getNewVPassword();
-  },
- 
-  showValidationErrorsEnd () {
-    if (this._getNewPassword() !== this._getNewVPassword()) {
-      const err = AuthErrors.toError('PASSWORDS_DO_NOT_MATCH');
-      this.showValidationError(this.$('#new_vpassword'), err);
-    }
-  },
- 
+
+
   submit (oldPassword, newPassword) {
     var account = this.getSignedInAccount();
     // var oldPassword = this._getOldPassword();
     // var newPassword = this._getNewPassword();
- 
+
     this.hideError();
- 
+
     return this.user.changeAccountPassword(
       account,
       oldPassword,
@@ -179,7 +188,7 @@ const View = BaseView.extend({
     }).then(() => {
       this.displaySuccess(t('Password changed successfully'));
       this.navigate('settings');
- 
+
       return this.render();
     }).catch((err) => {
       if (AuthErrors.is(err, 'INCORRECT_PASSWORD')) {
@@ -191,7 +200,7 @@ const View = BaseView.extend({
     });
   },
 });
- 
+
 Cocktail.mixin(
   View,
   ExperimentMixin,
@@ -204,6 +213,5 @@ Cocktail.mixin(
   ServiceMixin,
   BackMixin
 );
- 
+
 export default View;
- 
