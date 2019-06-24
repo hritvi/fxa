@@ -108,110 +108,110 @@ describe('views/settings/display_name', function () {
     });
   });
 
-  // describe('submit', function () {
-  //   var account;
-  //   var email;
-  //   var user;
-  //   var metrics;
-  //   var notifier;
-  //   var relier;
-  //   var view;
+  describe('submit', function () {
+    var account;
+    var email;
+    var user;
+    var metrics;
+    var notifier;
+    var relier;
+    var view;
 
-  //   beforeEach(function () {
-  //     email = TestHelpers.createEmail();
-  //     user = new User();
-  //     relier = new Relier();
-  //     notifier = new Notifier();
-  //     metrics = new Metrics({notifier});
-  //     // view = new View();
-  //     account = user.initAccount({
-  //       email: email,
-  //       sessionToken: 'fake session token',
-  //       uid: 'uid',
-  //       verified: true
-  //     });
-  //   });
+    beforeEach(function () {
+      email = TestHelpers.createEmail();
+      user = new User();
+      relier = new Relier();
+      notifier = new Notifier();
+      metrics = new Metrics({notifier});
+      // view = new View();
+      account = user.initAccount({
+        email: email,
+        sessionToken: 'fake session token',
+        uid: 'uid',
+        verified: true
+      });
+    });
 
-  //   afterEach(function () {
-  //     metrics.destroy();
+    afterEach(function () {
+      metrics.destroy();
 
-  //     view.remove();
-  //     view.destroy();
+      view.remove();
+      view.destroy();
 
-  //     view = metrics = null;
-  //   });
-  //   it('submits correctly', function () {
-  //     var name = '  joe cool  ';
-  //     sinon.stub(account, 'postDisplayName').callsFake(function () {
-  //       return Promise.resolve();
-  //     });
-  //     function renderDisplayNameFormComponent (displayName = ''){
-  //       view = new View({
-  //         metrics: metrics,
-  //         notifier: notifier,
-  //         relier: relier,
-  //         user: user
-  //       });
-  //       sinon.stub(view, 'getSignedInAccount').callsFake(function () {
-  //         return account;
-  //       });
-  //       sinon.stub(view, 'checkAuthorization').callsFake(function () {
-  //         return Promise.resolve(true);
-  //       });
-  //       sinon.stub(account, 'fetchProfile').callsFake(function () {
-  //         return Promise.resolve();
-  //       });
-  //       sinon.stub(user, 'setAccount').callsFake(function () {
-  //         return Promise.resolve();
-  //       });
-  //       return view.render(displayName)
-  //         .then(function (displayName) {
-  //           render(
-  //             <DisplayNameFormComponent displayName={displayName} account={account}/>
-  //           );
-  //         });
-  //     }
-  //     return renderDisplayNameFormComponent(name)
-  //       .then(() => {
-  //         sinon.stub(view, 'updateDisplayName').callsFake(function () {
-  //           return Promise.resolve();
-  //         });
-  //         sinon.stub(view, 'displaySuccess').callsFake(function () {
-  //           return Promise.resolve();
-  //         });
-  //         sinon.spy(view, 'logFlowEvent');
-  //         sinon.spy(view, 'render');
-  //         sinon.spy(view, 'navigate');
+      view = metrics = null;
+    });
+    it('submits correctly', function () {
+      var name = '  joe cool  ';
+      sinon.stub(account, 'postDisplayName').callsFake(function () {
+        return Promise.resolve();
+      });
+      function renderDisplayNameFormComponent (displayName = ''){
+        view = new View({
+          metrics: metrics,
+          notifier: notifier,
+          relier: relier,
+          user: user
+        });
+        sinon.stub(view, 'getSignedInAccount').callsFake(function () {
+          return account;
+        });
+        sinon.stub(view, 'checkAuthorization').callsFake(function () {
+          return Promise.resolve(true);
+        });
+        sinon.stub(account, 'fetchProfile').callsFake(function () {
+          return Promise.resolve();
+        });
+        sinon.stub(user, 'setAccount').callsFake(function () {
+          return Promise.resolve();
+        });
+        return view.render(displayName)
+          .then(function (displayName) {
+            render(
+              <DisplayNameFormComponent displayName={displayName} account={account}/>
+            );
+          });
+      }
+      return renderDisplayNameFormComponent(name)
+        .then(() => {
+          sinon.stub(view, 'updateDisplayName').callsFake(function () {
+            return Promise.resolve();
+          });
+          sinon.stub(view, 'displaySuccess').callsFake(function () {
+            return Promise.resolve();
+          });
+          sinon.spy(view, 'logFlowEvent');
+          sinon.spy(view, 'render');
+          sinon.spy(view, 'navigate');
 
-  //         // view.$('input.display-name').val(name);
-  //         return view.submit(name);
-  //       })
-  //       .then(() => {
-  //         console.log(name);
-  //         const expectedName = name.trim();
-  //         console.log(account);
-  //         console.log(view);
-  //         console.log(expectedName);
-  //         console.log(account);
-  //         assert.isTrue(account.postDisplayName.calledWith(expectedName));
-  //         assert.isTrue(view.updateDisplayName.calledWith(expectedName));
-  //         assert.isTrue(view.displaySuccess.called);
-  //         assert.isTrue(TestHelpers.isEventLogged(metrics,
-  //           'settings.display-name.success'));
-  //         assert.isTrue(view.navigate.calledWith('settings'));
+          // view.$('input.display-name').val(name);
+          return view.submit(name);
+        })
+        .then(() => {
+          console.log(name);
+          const expectedName = name.trim();
+          console.log(account);
+          console.log(view);
+          console.log(expectedName);
+          console.log(account);
+          assert.isTrue(account.postDisplayName.calledWith(expectedName));
+          assert.isTrue(view.updateDisplayName.calledWith(expectedName));
+          assert.isTrue(view.displaySuccess.called);
+          assert.isTrue(TestHelpers.isEventLogged(metrics,
+            'settings.display-name.success'));
+          assert.isTrue(view.navigate.calledWith('settings'));
 
-  //         assert.equal(view.logFlowEvent.callCount, 1);
-  //         const args = view.logFlowEvent.args[0];
-  //         assert.lengthOf(args, 1);
-  //         const eventParts = args[0].split('.');
-  //         assert.lengthOf(eventParts, 4);
-  //         assert.equal(eventParts[0], 'timing');
-  //         assert.equal(eventParts[1], 'displayName');
-  //         assert.equal(eventParts[2], 'change');
-  //         assert.match(eventParts[3], /^[0-9]+$/);
-  //       });
-  //   });
+          assert.equal(view.logFlowEvent.callCount, 1);
+          const args = view.logFlowEvent.args[0];
+          assert.lengthOf(args, 1);
+          const eventParts = args[0].split('.');
+          assert.lengthOf(eventParts, 4);
+          assert.equal(eventParts[0], 'timing');
+          assert.equal(eventParts[1], 'displayName');
+          assert.equal(eventParts[2], 'change');
+          assert.match(eventParts[3], /^[0-9]+$/);
+        });
+    });
 
-  // });
+  });
 
 });
