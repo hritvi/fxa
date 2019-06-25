@@ -148,35 +148,10 @@ const View = BaseView.extend({
     this.render();
   },
 
-  // setInitialContext (context) {
-  //   context.set('displayName', this._displayName);
-  // },
-
-  // beforeRender () {
-  //   var account = this.getSignedInAccount();
-  //   return account.fetchProfile()
-  //     .then(() => {
-  //       this.user.setAccount(account);
-  //       this._displayName = account.get('displayName');
-  //     });
-  // },
-
-  // isValidStart () {
-  //   // if no display name set then we still do not want to activate the change button
-  //   var accountDisplayName = this.getSignedInAccount().get('displayName') || '';
-  //   var displayName = this.getElementValue('input.display-name').trim();
-
-  //   return accountDisplayName !== displayName;
-  // },
-
   submit(displayName) {
-    console.log('rendered');
-    console.log(displayName);
     const start = Date.now();
     const account = this.getSignedInAccount();
     displayName = displayName.trim();
-    // console.log('here');
-    console.log(account);
     return account.postDisplayName(displayName).then(() => {
       this.logViewEvent('success');
       this.updateDisplayName(displayName);
@@ -185,8 +160,6 @@ const View = BaseView.extend({
         `timing.displayName.change.${Date.now() - start}`
       );
       this.navigate('settings');
-      console.log(account);
-      // console.log(view);
     });
   },
 

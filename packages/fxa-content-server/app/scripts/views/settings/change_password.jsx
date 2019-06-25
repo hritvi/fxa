@@ -104,8 +104,15 @@ class ChangePasswordForm extends React.Component{
            Without it, the password manager saves the old_password as the username. */}
            <input type="email" defaultValue={this.state.mail} className="hidden" />
            <div className="input-row password-row">
-             <input type="password" className="password" id="old_password" placeholder="Old password" required pattern=".{8,}" autoFocus onChange={this.getOldPassword}/>
-
+             <input
+               type="password"
+               className="password"
+               id="old_password"
+               placeholder="Old password"
+               required pattern=".{8,}"
+               autoFocus
+               onChange={this.getOldPassword}
+             />
              <div className="input-help input-help-forgot-pw links centered"><a href="/reset_password" className="reset-password">Forgot password?</a></div>
            </div>
 

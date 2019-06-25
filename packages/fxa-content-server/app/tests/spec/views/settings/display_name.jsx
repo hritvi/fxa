@@ -53,7 +53,7 @@ describe('views/settings/display_name', function () {
 
     it('renders correctly', () => {
       renderDisplayNameComponent();
-      
+
       const headerEls = document.querySelectorAll('.settings-unit-summary');
       assert.lengthOf(headerEls, 1);
       assert.include(headerEls[0].innerText, 'Display name');
@@ -187,17 +187,12 @@ describe('views/settings/display_name', function () {
           return view.submit(name);
         })
         .then(() => {
-          console.log(name);
           const expectedName = name.trim();
-          console.log(account);
-          console.log(view);
-          console.log(expectedName);
-          console.log(account);
           assert.isTrue(account.postDisplayName.calledWith(expectedName));
           assert.isTrue(view.updateDisplayName.calledWith(expectedName));
           assert.isTrue(view.displaySuccess.called);
           assert.isTrue(TestHelpers.isEventLogged(metrics,
-            'settings.display-name.success'));
+            '.success'));
           assert.isTrue(view.navigate.calledWith('settings'));
 
           assert.equal(view.logFlowEvent.callCount, 1);
