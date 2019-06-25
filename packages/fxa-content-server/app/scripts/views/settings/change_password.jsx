@@ -11,7 +11,7 @@ import PasswordMixin from '../mixins/password-mixin';
 import PasswordStrengthMixin from '../mixins/password-strength-mixin';
 import ServiceMixin from '../mixins/service-mixin';
 import SettingsPanelMixin from '../mixins/settings-panel-mixin';
-import Template from 'templates/settings/change_password.mustache';
+// import Template from 'templates/settings/change_password.mustache';
 // eslint-disable-next-line
  import React from 'react';
 import ReactDOM from 'react-dom';
@@ -152,23 +152,26 @@ class ChangePasswordForm extends React.Component{
 }
 
 const View = BaseView.extend({
-  template: Template,
-  classNameName: 'change-password',
+  template: '<div />', //Template
+  className: 'change-password',
   viewName: 'settings.change-password',
 
   // getAccount () {
   //   return this.getSignedInAccount();
   // },
 
-  afterVisible () {
-    ReactDOM.render(
-      <ChangePassword
-        account={this.getSignedInAccount()}
-        submit={(oldPassword, newPassword)=>this.submit(oldPassword, newPassword)}
-        showValidationError={(id,err)=>this.showValidationError(this.$(id),err)}
-      />,
-      this.$el.get(0)
-    );
+  render () {
+    return Promise.resolve().then(() => {
+      ReactDOM.render(
+        <ChangePassword
+          account={this.getSignedInAccount()}
+          submit={(oldPassword, newPassword)=>this.submit(oldPassword, newPassword)}
+          showValidationError={(id,err)=>this.showValidationError(this.$(id),err)}
+        />,
+        this.$el.get(0)
+      );
+      return true;
+    });
   },
 
   // setInitialContext (context) {
@@ -196,7 +199,7 @@ const View = BaseView.extend({
       this.displaySuccess(t('Password changed successfully'));
       this.navigate('settings');
 
-      return this.render();
+      // return this.render();
     }).catch((err) => {
       if (AuthErrors.is(err, 'INCORRECT_PASSWORD')) {
         return this.showValidationError(this.$('#old_password'), err);

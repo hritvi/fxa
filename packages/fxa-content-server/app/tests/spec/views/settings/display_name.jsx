@@ -86,7 +86,6 @@ describe('views/settings/display_name', function () {
 
       const submitDisplay = document.querySelectorAll('#submit_display');
       assert.lengthOf(submitDisplay, 1);
-      // console.log(submitDisplay[0].attributes.disabled);
       assert.equal(submitDisplay[0].getAttribute('disabled'),'','name did not change');
     });
 
@@ -95,15 +94,7 @@ describe('views/settings/display_name', function () {
       renderDisplayNameFormComponent('joe changed');
 
       const submitDisplay = document.querySelectorAll('#submit_display');
-      const displayName = document.querySelectorAll('.display-name');
-      console.log('here');
-      console.log(document.querySelectorAll('.display-name'));
       assert.lengthOf(submitDisplay, 1);
-      // assert.lengthOf(displayName,1);
-      displayName[0].value = 'joe changed';
-      console.log(submitDisplay[0].attributes.disabled);
-      console.log(submitDisplay[0].attributes.align);
-      console.log(account.get('displayName'));
       assert.equal(submitDisplay[0].attributes.disabled,null,'name changed');
     });
   });

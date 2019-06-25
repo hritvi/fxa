@@ -65,18 +65,12 @@ export class DisplayNameFormComponent extends React.Component {
   constructor(props) {
     super(props);
     this.isValid = this.isValid.bind(this);
+    const accountDisplayName = props.account.get('displayName') || '';
+
     this.state = {
-      changeButton: 1,
-      displayName: props.account.get('displayName') || ''
-    }, ()=>{
-      this.isValid();
+      disableChangeButton: this.props.displayName === accountDisplayName,
+      displayName: accountDisplayName
     };
-    console.log('dis');
-    console.log(this.props.displayName);
-    console.log('2');
-    console.log(this.state.displayName);
-    console.log(this.state.changeButton);
-    
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -92,15 +86,17 @@ export class DisplayNameFormComponent extends React.Component {
     isValid (){
       console.log('is valid called');
       if (this.props.displayName !== this.state.displayName){
-        this.setState({changeButton: 0});
+        this.setState({disableChangeButton: 0});
       } else {
-        this.setState({changeButton: 1});
+        this.setState({disableChangeButton: 1});
       }
     }
 
     handleSubmit = event => {
       event.preventDefault();
-      this.props.submit(this.state.displayName);
+      this.setState({ disableChangeButton: 1 }, () => {
+        this.props.submit(this.state.displayName);
+      });
     };
 
     render() {
@@ -127,7 +123,7 @@ export class DisplayNameFormComponent extends React.Component {
               type="submit"
               id="submit_display"
               className="settings-button primary-button"
-              disabled={this.state.changeButton}
+              disabled={this.state.disableChangeButton}
             >
               {t('Change')}
             </button>
@@ -165,12 +161,15 @@ const View = BaseView.extend({
 
   render() {
     var account = this.getSignedInAccount();
-    return account.fetchProfile().then(() => {
+    return Promise.all([
+      translator.fetch(),
+      account.fetchProfile()
+    ]).then(() => {
       ReactDOM.render(
         <DisplayName
-          account={this.getSignedInAccount()}
+          account={account}
           submit={displayName => this.submit(displayName)}
-          displayName={this.getSignedInAccount().get('displayName')}
+          displayName={account.get('displayName')}
         />,
         this.$el.get(0)
       );
