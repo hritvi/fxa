@@ -15,17 +15,20 @@ import SettingsPanelMixin from '../mixins/settings-panel-mixin';
 // eslint-disable-next-line
  import React from 'react';
 import ReactDOM from 'react-dom';
+import Translator from '../../lib/translator';
 
-const t = msg => msg;
+const translator = new Translator();
+
+const t = msg => translator.get(msg);
 
 function ChangePassword(props){
   return (
     <div id="change-password" className="settings-unit">
       <div className="settings-unit-stub">
         <header className="settings-unit-summary">
-          <h2 className="settings-unit-title">Password</h2>
+          <h2 className="settings-unit-title">{t('Password')}</h2>
         </header>
-        <button className="settings-button secondary-button settings-unit-toggle" data-href="settings/change_password">Change...</button>
+        <button className="settings-button secondary-button settings-unit-toggle" data-href="settings/change_password">{t('Change...')}</button>
       </div>
       <ChangePasswordForm
         account={props.account}
@@ -46,18 +49,16 @@ class ChangePasswordForm extends React.Component{
       newVPass: '',
       oldPass: ''
     };
-    this.getOldPassword = this.getOldPassword.bind(this);
-    this.getNewPassword = this.getNewPassword.bind(this);
-    this.getNewVPassword = this.getNewVPassword.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
    getOldPassword = event => {
+     console.log('ol');
      this.setState({
        oldPass: event.target.value
      });
    }
 
    getNewPassword = event => {
+     console.log('n');
      this.setState({
        newPass: event.target.value
      }, ()=>{
@@ -66,6 +67,7 @@ class ChangePasswordForm extends React.Component{
    }
 
    getNewVPassword = event => {
+     console.log('v');
      this.setState({
        newVPass: event.target.value
      }, ()=>{
@@ -98,7 +100,7 @@ class ChangePasswordForm extends React.Component{
 
          <form noValidate onSubmit={this.handleSubmit}>
            <p>
-             Once you're finished, use your new password to sign in on all of your devices.
+             {t('Once you\'re finished, use your new password to sign in on all of your devices.')}
            </p>
            {/* hidden email field is to allow Fx password manager to correctly save the updated password.
            Without it, the password manager saves the old_password as the username. */}
@@ -108,20 +110,21 @@ class ChangePasswordForm extends React.Component{
                type="password"
                className="password"
                id="old_password"
-               placeholder="Old password"
+               placeholder={t('Old password')}
+               value=""
+               onChange={this.getOldPassword}
                required pattern=".{8,}"
                autoFocus
-               onChange={this.getOldPassword}
              />
-             <div className="input-help input-help-forgot-pw links centered"><a href="/reset_password" className="reset-password">Forgot password?</a></div>
+             <div className="input-help input-help-forgot-pw links centered"><a href="/reset_password" className="reset-password">{t('Forgot password?')}</a></div>
            </div>
-
+           
            <div className="input-row password-row">
              <input
                type="password"
                className="password check-password tooltip-below"
                id="new_password"
-               placeholder="New password"
+               placeholder={t('New password')}
                required pattern=".{8,}"
                data-synchronize-show="true"
                onChange={this.getNewPassword}
@@ -134,7 +137,7 @@ class ChangePasswordForm extends React.Component{
                type="password"
                className="password check-password tooltip-below"
                id="new_vpassword"
-               placeholder="Re-enter password"
+               placeholder={t('Re-enter password')}
                required pattern=".{8,}"
                data-synchronize-show="true"
                onChange={this.getNewVPassword}
@@ -142,8 +145,8 @@ class ChangePasswordForm extends React.Component{
            </div>
 
            <div className="button-row">
-             <button type="submit" className="settings-button primary-button">Change</button>
-             <button className="settings-button secondary-button cancel">Cancel</button>
+             <button type="submit" className="settings-button primary-button">{t('Change')}</button>
+             <button className="settings-button secondary-button cancel">{t('Cancel')}</button>
            </div>
          </form>
        </div>
@@ -161,7 +164,7 @@ const View = BaseView.extend({
   // },
 
   render () {
-    return Promise.resolve().then(() => {
+    return Promise.resolve(translator.fetch()).then(() => {
       ReactDOM.render(
         <ChangePassword
           account={this.getSignedInAccount()}

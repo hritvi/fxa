@@ -12,11 +12,20 @@ import sinon from 'sinon';
 import TestHelpers from '../../../lib/helpers';
 import User from 'models/user';
 import View from 'views/settings/display_name';
-import {ChangeorAddButtonComponent, DisplayNameFormComponent, DisplayNameComponent} from 'views/settings/display_name';
-import { render, cleanup, fireEvent, queryByText } from '@testing-library/react';
+import {
+  ChangeorAddButtonComponent,
+  DisplayNameFormComponent,
+  DisplayNameComponent,
+} from 'views/settings/display_name';
+import {
+  render,
+  cleanup,
+  fireEvent,
+  queryByText,
+  getByText,
+} from '@testing-library/react';
 
-describe('views/settings/display_name', function () {
-
+describe('views/settings/display_name', function() {
   afterEach(() => {
     cleanup();
   });
@@ -173,8 +182,8 @@ describe('views/settings/display_name', function () {
           sinon.spy(view, 'logFlowEvent');
           sinon.spy(view, 'render');
           sinon.spy(view, 'navigate');
-
-          // view.$('input.display-name').val(name);
+          // fireEvent.click(getByText(document,'Change'));
+          console.log(document);
           return view.submit(name);
         })
         .then(() => {

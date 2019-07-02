@@ -76,6 +76,7 @@ export class DisplayNameFormComponent extends React.Component {
   }
 
     handleChange = event => {
+      console.log('called');
       this.setState({
         displayName: event.target.value
       }, ()=>{
