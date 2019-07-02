@@ -5,7 +5,7 @@
 import AuthErrors from '../../lib/auth-errors';
 import BackMixin from '../mixins/back-mixin';
 import Cocktail from 'cocktail';
-import BaseView from '../form';
+import FormView from '../form';
 import ExperimentMixin from '../mixins/experiment-mixin';
 import PasswordMixin from '../mixins/password-mixin';
 import PasswordStrengthMixin from '../mixins/password-strength-mixin';
@@ -51,14 +51,12 @@ class ChangePasswordForm extends React.Component{
     };
   }
    getOldPassword = event => {
-     console.log('ol');
      this.setState({
        oldPass: event.target.value
      });
    }
 
    getNewPassword = event => {
-     console.log('n');
      this.setState({
        newPass: event.target.value
      }, ()=>{
@@ -67,7 +65,6 @@ class ChangePasswordForm extends React.Component{
    }
 
    getNewVPassword = event => {
-     console.log('v');
      this.setState({
        newVPass: event.target.value
      }, ()=>{
@@ -111,7 +108,6 @@ class ChangePasswordForm extends React.Component{
                className="password"
                id="old_password"
                placeholder={t('Old password')}
-               value=""
                onChange={this.getOldPassword}
                required pattern=".{8,}"
                autoFocus
@@ -154,7 +150,7 @@ class ChangePasswordForm extends React.Component{
    }
 }
 
-const View = BaseView.extend({
+const View = FormView.extend({
   template: '<div />', //Template
   className: 'change-password',
   viewName: 'settings.change-password',
@@ -182,7 +178,7 @@ const View = BaseView.extend({
   //   context.set('email', account.get('email'));
   // },
 
-
+  onFormSubmit () {},
   submit (oldPassword, newPassword) {
     var account = this.getSignedInAccount();
     // var oldPassword = this._getOldPassword();
